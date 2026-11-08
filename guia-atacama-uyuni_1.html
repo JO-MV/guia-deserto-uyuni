@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F7F4EF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Atacama + Uyuni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F4EF; --surface:#FFFFFF; --ink:#1F1D1A; --muted:#7A746B; --line:#E9E3D9;
+  --accent:#B5643C; --accent-soft:#F4E8DE; --salt:#5B7C8D; --salt-soft:#E6EEF1;
+  --ok:#5E7D5A; --ok-soft:#E7EFE4; --warn:#A87A22; --warn-soft:#F8EFD9;
+  --r:18px; --r-sm:12px; --shadow:0 1px 2px rgba(31,29,26,.04),0 6px 20px rgba(31,29,26,.06);
+  --serif:"Fraunces",Georgia,serif; --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.01em;line-height:1.2}
+h2{font-size:24px;margin:26px 0 4px}
+h3{font-size:17px}
+.sub{color:var(--muted);font-size:14px;margin-bottom:14px}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.view{display:none;animation:fade .25s ease}
+.view.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.block-h{font-family:var(--serif);font-size:15px;color:var(--muted);margin:24px 0 10px;font-weight:500;display:flex;justify-content:space-between;align-items:baseline}
+.block-h small{font-family:var(--sans);font-size:12px}
+
+/* tags */
+.tag{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;white-space:nowrap;vertical-align:middle}
+.t-word{background:#EFEBE4;color:#5C564D}
+.t-add{background:var(--salt-soft);color:var(--salt)}
+.t-conf{background:var(--warn-soft);color:var(--warn)}
+.t-new{background:var(--accent-soft);color:var(--accent)}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:16px}
+.stack>*+*{margin-top:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:99px;padding:9px 16px;font-size:13px;font-weight:600}
+.btn-dark{background:var(--ink);color:#fff}
+.btn-soft{background:var(--surface);box-shadow:var(--shadow)}
+.btn-line{border:1px solid var(--line);color:var(--muted)}
+
+/* hero */
+.hero{position:relative;height:230px;overflow:hidden;background:linear-gradient(160deg,#C9A27E,#8C5A3C)}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 25%,rgba(0,0,0,.62))}
+.hero-in{position:absolute;left:0;right:0;bottom:0;z-index:1;color:#fff;padding:0 16px 18px;max-width:640px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.hero h1{font-size:30px;margin:2px 0}
+.hero .eyebrow{color:rgba(255,255,255,.8)}
+.hero p{opacity:.9;font-size:13px}
+.hero .cd{text-align:right;flex:none}
+.hero .cd b{display:block;font-family:var(--serif);font-size:30px;line-height:1}
+.hero .cd span{font-size:12px;opacity:.85}
+
+/* resumo */
+.sum{display:flex;gap:10px;margin-top:16px}
+.sum .card{flex:1;padding:12px 14px}
+.sum b{display:block;font-family:var(--serif);font-size:22px;line-height:1.1}
+.sum span{font-size:12px;color:var(--muted)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+
+.alert{display:flex;gap:10px;padding:12px 14px;border-radius:var(--r-sm);background:var(--warn-soft);font-size:13px;color:#6B5A36}
+.alert .dot{flex:none;width:7px;height:7px;border-radius:50%;background:var(--warn);margin-top:7px}
+.alert b{color:var(--ink);font-weight:600}
+.alert.info{background:var(--salt-soft);color:#3E5560}.alert.info .dot{background:var(--salt)}
+
+/* roteiro */
+.tl{position:relative;padding-left:22px}
+.tl::before{content:"";position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.day{position:relative;margin-bottom:12px}
+.day::before{content:"";position:absolute;left:-21px;top:19px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+.day.bo::before{border-color:var(--salt)}
+.day.fix::before,.day.full::before{background:var(--accent)}
+.day.bo.full::before{background:var(--salt)}
+.day.today .card{outline:2px solid var(--accent)}
+.day .card{padding:14px 16px}
+.day-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.day-date{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.04em;text-transform:uppercase}
+.day.bo .day-date{color:var(--salt)}
+.alt{font-size:12px;color:var(--muted);white-space:nowrap}
+.day h3{margin:2px 0 6px}
+.steps{list-style:none}
+.steps li{display:grid;grid-template-columns:70px 1fr auto;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.steps li:first-child{border-top:0}
+.steps .h{font-weight:600;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.steps .h.t{color:var(--ink)}
+.steps .rm{color:var(--muted);font-size:18px;line-height:1;padding:2px 6px}
+.steps .th{display:flex;align-items:center;gap:10px}
+.steps .th img{width:36px;height:36px;border-radius:9px;object-fit:cover;background:var(--accent-soft)}
+.free{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--muted);font-size:14px}
+.free button{color:var(--accent);font-weight:600;font-size:13px}
+.warn{font-size:12.5px;color:var(--warn);margin-top:8px;padding:8px 10px;background:var(--warn-soft);border-radius:10px}
+.note{font-size:12.5px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.note b{color:var(--ink);font-weight:600}
+details.flights summary{list-style:none;cursor:pointer;font-size:13px;color:var(--accent);font-weight:600;margin-top:4px}
+details.flights summary::-webkit-details-marker{display:none}
+
+/* altitude chart */
+.alt-chart{display:flex;align-items:flex-end;gap:5px;height:130px;padding-top:8px}
+.alt-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px;min-width:0}
+.alt-bar{width:100%;border-radius:6px 6px 3px 3px;background:var(--accent);opacity:.85;min-height:3px}
+.alt-bar.bo{background:var(--salt)}
+.alt-bar.none{background:var(--line);opacity:1}
+.alt-v{font-size:9px;color:var(--muted);font-variant-numeric:tabular-nums}
+.alt-d{font-size:10px;color:var(--muted)}
+
+/* carrossel de passeios */
+.rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 16px 16px;margin:0 -16px;scrollbar-width:none;scroll-padding:16px}
+.rail::-webkit-scrollbar{display:none}
+.tc{flex:none;width:76%;max-width:300px;scroll-snap-align:start;background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.tc .ph{position:relative;height:150px;background:linear-gradient(150deg,#D8BFA3,#9C6B4C)}
+.tc.bo .ph{background:linear-gradient(150deg,#C9D6DC,#6F8C99)}
+.tc .ph img{width:100%;height:100%;object-fit:cover}
+.tc .ph .alt-pill{position:absolute;right:8px;bottom:8px;background:rgba(31,29,26,.72);color:#fff;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:99px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.tc .ph .tg{position:absolute;left:8px;top:8px;display:flex;gap:5px}
+.tc .ph .tg .tag{background:rgba(255,255,255,.93);color:var(--ink)}
+.tc .ph .tg .tag.new{color:var(--accent)}
+.tc .bd{padding:12px 14px 14px;display:flex;flex-direction:column;flex:1}
+.tc .meta{font-size:12px;color:var(--muted);margin:2px 0 6px}
+.tc p{font-size:13.5px;color:#4A453E}
+.tc ul{list-style:none;display:flex;flex-wrap:wrap;gap:5px;margin:10px 0 12px}
+.tc li{font-size:11.5px;background:var(--bg);padding:3px 9px;border-radius:99px}
+.tc .pick{margin-top:auto;width:100%;border-radius:12px;padding:10px;font-size:13.5px;font-weight:600;border:1.5px solid var(--ink)}
+.tc .pick.on{background:var(--ink);color:#fff}
+.tc.bo .pick.on{background:var(--salt);border-color:var(--salt)}
+.tc.info .bd{padding-bottom:16px}
+.noimg img{display:none}
+.hint{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;margin:-4px 0 6px}
+
+/* bottom sheet */
+.scrim{position:fixed;inset:0;background:rgba(31,29,26,.4);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--bg);border-radius:22px 22px 0 0;max-height:86vh;overflow-y:auto;transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);padding:10px 16px calc(20px + env(safe-area-inset-bottom))}
+.sheet.on{transform:none}
+.sheet .grab{width:40px;height:4px;border-radius:99px;background:#D5CDC0;margin:0 auto 12px}
+.sheet .in{max-width:600px;margin:0 auto}
+.sheet h3{font-size:20px}
+.sheet .sub{margin-bottom:10px}
+.drow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:11px 12px;border-radius:14px;background:var(--surface);margin-bottom:8px;box-shadow:var(--shadow);border:1.5px solid transparent}
+.drow.sel{border-color:var(--ink)}
+.drow[disabled]{opacity:.45;box-shadow:none;cursor:default}
+.drow .dd{flex:none;width:46px;text-align:center}
+.drow .dd b{display:block;font-family:var(--serif);font-size:20px;line-height:1}
+.drow .dd span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.drow .dx{flex:1;font-size:13px;color:var(--muted);min-width:0}
+.drow .dx .w{display:block;color:var(--warn);font-size:12px;margin-top:2px}
+.drow .ck{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid #CFC7BA;display:grid;place-items:center}
+.drow.sel .ck{background:var(--ink);border-color:var(--ink)}
+
+/* segmentado */
+.seg{display:flex;background:#ECE6DC;border-radius:12px;padding:3px;margin:4px 0 16px}
+.seg button{flex:1;padding:9px;border-radius:10px;font-size:14px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.pane{display:none}.pane.on{display:block}
+
+/* checklist */
+.cl{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
+.cl-h{display:flex;align-items:center;gap:12px;padding:14px 16px;width:100%;text-align:left}
+.cl-h .ring{flex:none;width:40px;height:40px}
+.cl-h .tt{flex:1}
+.cl-h .tt b{display:block;font-size:15px}
+.cl-h .tt span{font-size:12px;color:var(--muted)}
+.cl-h .chev{transition:transform .2s;color:var(--muted)}
+.cl.open .chev{transform:rotate(180deg)}
+.cl-b{display:none;padding:0 16px 12px}
+.cl.open .cl-b{display:block}
+.item{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.box{flex:none;width:22px;height:22px;border-radius:7px;border:1.5px solid #CFC7BA;display:grid;place-items:center;transition:all .15s;margin-top:1px}
+.box svg{opacity:0;transition:opacity .15s}
+.item.done .box{background:var(--ok);border-color:var(--ok)}
+.item.done .box svg{opacity:1}
+.item .lbl{flex:1;font-size:14px}
+.item.done .lbl .tx{color:var(--muted);text-decoration:line-through}
+.item .lbl small{display:block;color:var(--muted);font-size:12px;margin-top:1px}
+.item .lbl .tag{margin-left:3px;font-size:10px;padding:2px 6px}
+.item .del{color:var(--muted);font-size:18px;line-height:1;padding:0 4px}
+.add{display:flex;gap:8px;padding-top:10px;border-top:1px solid var(--line)}
+.add input{flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font:inherit;font-size:14px;background:var(--bg);min-width:0}
+.add button{background:var(--ink);color:#fff;border-radius:10px;padding:0 14px;font-size:16px;font-weight:500}
+.total{display:flex;align-items:center;gap:14px}
+.bar{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ok);border-radius:99px;transition:width .3s}
+.link-btn{font-size:13px;color:var(--muted);text-decoration:underline;padding:8px 0}
+.empty{font-size:13px;color:var(--muted);padding:10px 0;border-top:1px solid var(--line)}
+
+/* dicas */
+.tips{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tip{background:var(--surface);border-radius:var(--r-sm);box-shadow:var(--shadow);padding:13px 14px}
+.tip .eyebrow{margin-bottom:4px}
+.tip b{display:block;font-size:14px;line-height:1.35}
+.tip span{display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
+.tip.wide{grid-column:1/-1}
+.tip span.tag{display:inline-flex;margin:0 0 0 2px;font-size:10px;padding:1px 6px}
+.ul{list-style:none}
+.ul li{position:relative;padding:7px 0 7px 16px;font-size:14px;border-top:1px solid var(--line)}
+.ul li:first-child{border-top:0}
+.ul li::before{content:"";position:absolute;left:2px;top:15px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.ul li small{display:block;color:var(--muted);font-size:12.5px}
+.issue{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line)}
+.issue:first-child{border-top:0}
+.issue .n{flex:none;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:600;display:grid;place-items:center}
+.issue b{display:block;font-size:14px}
+.issue span{font-size:13px;color:var(--muted)}
+.credit{font-size:11.5px;color:var(--muted);text-align:center;margin:26px 0 8px}
+
+/* nav */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(255,255,255,.9);backdrop-filter:saturate(180%) blur(16px);-webkit-backdrop-filter:saturate(180%) blur(16px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs .in{max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 8px;font-size:11px;font-weight:500;color:var(--muted)}
+nav.tabs button svg{width:22px;height:22px}
+nav.tabs button.on{color:var(--accent)}
+.topbar{position:sticky;top:0;z-index:10;background:rgba(247,244,239,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:52px}
+.topbar b{font-family:var(--serif);font-size:17px;font-weight:600}
+.topbar span{font-size:12px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:#fff;font-size:13px;padding:9px 16px;border-radius:99px;opacity:0;transition:all .25s;z-index:50;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (min-width:700px){.hero{height:300px}.tc{width:280px}}
+</style>
+</head>
+<body>
+
+<!-- ================= ROTEIRO ================= -->
+<section class="view on" id="v-roteiro">
+  <div class="hero">
+    <img src="https://pukarumitravels.com/wp-content/uploads/pukarumi-home-20261003-v2/877471f8f4ce-960.webp" alt="Deserto do Atacama" onerror="this.remove()">
+    <div class="hero-in">
+      <div><div class="eyebrow">Chile + Bolívia</div><h1>Atacama &amp; Uyuni</h1><p>23/11 a 04/12/2026 · 12 dias</p></div>
+      <div class="cd" id="countdown"></div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="sum">
+      <div class="card"><b id="s-tours">0</b><span>passeios escolhidos</span></div>
+      <div class="card"><b id="s-free">0</b><span>dias ainda livres</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-dark" onclick="go('passeios')">Escolher passeios</button>
+      <button class="btn btn-soft" onclick="applySuggestion()">Usar sugestão por altitude</button>
+      <button class="btn btn-line" id="clear-btn" onclick="clearPlan()">Limpar</button>
+    </div>
+    <div class="stack" id="plan-warn" style="margin-top:14px"></div>
+
+    <div class="block-h">Roteiro escolhido</div>
+    <div class="tl" id="timeline"></div>
+
+    <div class="block-h">Altitude máxima por dia <small>aprox.</small></div>
+    <div class="card"><div class="alt-chart" id="altchart"></div>
+      <div class="note"><span style="color:var(--accent)">&#9632;</span> Chile &nbsp;<span style="color:var(--salt)">&#9632;</span> Bolívia &nbsp;·&nbsp; Suba aos poucos: passeios mais baixos primeiro.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PASSEIOS ================= -->
+<section class="view" id="v-passeios">
+  <div class="topbar"><div class="wrap"><b>Passeios</b><span id="p-count"></span></div></div>
+  <div class="wrap">
+    <h2>Escolha os passeios</h2>
+    <p class="sub">Toque em <b>Escolher data</b> para colocar no roteiro. Altitudes e durações aproximadas.</p>
+
+    <div class="block-h">Deserto do Atacama <small id="c-at"></small></div>
+    <div class="hint"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Deslize para o lado</div>
+    <div class="rail" id="rail-at"></div>
+
+    <div class="block-h">Salar de Uyuni · Bolívia</div>
+    <div class="rail" id="rail-pack"></div>
+
+    <div class="block-h">O que você vê na travessia</div>
+    <div class="rail" id="rail-bo"></div>
+    <p class="credit">Fotos: Pukarumi Travels e Wikimedia Commons. Carregam com internet.</p>
+  </div>
+</section>
+
+<!-- ================= DICAS & CHECKLIST ================= -->
+<section class="view" id="v-dicas">
+  <div class="topbar"><div class="wrap"><b>Dicas e checklist</b><span id="ck-top"></span></div></div>
+  <div class="wrap">
+    <h2>Antes e durante</h2>
+    <div class="seg"><button data-p="ck" onclick="pane('ck')">Checklist</button><button data-p="tp" onclick="pane('tp')">Dicas</button></div>
+
+    <div class="pane" id="p-ck">
+      <div class="card total" style="margin-bottom:12px"><div style="flex:1"><div class="eyebrow" style="margin-bottom:8px" id="tot-txt"></div><div class="bar"><i id="tot-bar"></i></div></div></div>
+      <div class="legend"><span class="tag t-word">Word</span><span class="tag t-add">Acrescentado</span><span class="tag t-conf">Confirmar</span></div>
+      <div id="lists"></div>
+      <button class="link-btn" onclick="resetAll()">Desmarcar tudo</button>
+    </div>
+
+    <div class="pane" id="p-tp"><div id="tips"></div>
+      <p class="credit">Exigências conferidas em fontes públicas em nov/2026. Confirme nos canais oficiais antes de embarcar.</p>
+    </div>
+  </div>
+</section>
+
+<div class="scrim" id="scrim" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet"><div class="grab"></div><div class="in" id="sheet-in"></div></div>
+<div class="toast" id="toast"></div>
+<nav class="tabs"><div class="in" id="nav"></div></nav>
+
+<script>
+/* ============ base ============ */
+const $=s=>document.querySelector(s);
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const TAG={w:'<span class="tag t-word">Word</span>',a:'<span class="tag t-add">Acrescentado</span>',c:'<span class="tag t-conf">Confirmar</span>'};
+const tags=s=>(s||'').split('').map(k=>TAG[k]||'').join(' ');
+const PK=id=>'https://pukarumitravels.com/wp-content/uploads/pukarumi-home-20261003-v2/'+id+'-960.webp';
+const WM=f=>'https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(f)+'?width=960';
+/* tenta a versão 960 e cai para 640 se não existir */
+function imgErr(el){if(el.src.includes('-960.webp')){el.src=el.src.replace('-960.webp','-640.webp')}else{el.parentNode.classList.add('noimg')}}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),1800)}
+
+/* ============ dias ============ */
+const DAYS=[
+ ['2026-11-23','Seg','23/11'],['2026-11-24','Ter','24/11'],['2026-11-25','Qua','25/11'],['2026-11-26','Qui','26/11'],
+ ['2026-11-27','Sex','27/11'],['2026-11-28','Sáb','28/11'],['2026-11-29','Dom','29/11'],['2026-11-30','Seg','30/11'],
+ ['2026-12-01','Ter','01/12'],['2026-12-02','Qua','02/12'],['2026-12-03','Qui','03/12'],['2026-12-04','Sex','04/12']
+].map(([d,w,l],i)=>({d,w,l,i}));
+const PICKABLE=DAYS.slice(1,11); /* 24/11 a 03/12 */
+const SLOT={mad:'Madrugada',man:'Manhã',tar:'Tarde',noi:'Noite',dia:'Dia inteiro'};
+const SLOTORD=['mad','man','tar','noi'];
+
+/* ============ passeios ============ */
+const TOURS=[
+ {id:'luna',word:1,n:'Valle de la Luna',img:PK('ec38c3ed190a'),alt:2500,dur:'3 a 4 h',slots:['tar'],d:'Formações de sal e argila que parecem a superfície da Lua, com pôr do sol nas dunas.',h:['Duna Mayor','Anfiteatro','Tres Marías'],obs:'Ingresso com horário marcado. Confirme se o tour inclui.'},
+ {id:'lagunas',word:1,n:'Lagunas Altiplânicas + Piedras Rojas',img:PK('f70f3d79d67e'),alt:4200,dur:'10 a 12 h',slots:['man','tar'],d:'Lagunas turquesa aos pés de vulcões e rochas vermelhas à beira de um salar.',h:['Miscanti e Miñiques','Piedras Rojas','Laguna Chaxa (flamingos)','Toconao'],obs:'Laguna Chaxa costuma estar incluída. Confirme com a agência.'},
+ {id:'tatio',word:1,n:'Geysers del Tatio',img:PK('9725b3eb1bf7'),alt:4320,dur:'Saída ~4h30, volta ~12h',slots:['mad','man'],d:'Campo de gêiseres com colunas de vapor ao nascer do sol. Frio abaixo de 0 °C.',h:['Gêiseres','Piscina termal','Vado de Putana','Machuca'],obs:''},
+ {id:'cejar',word:1,n:'Laguna Cejar',img:PK('bdc648a3d682'),alt:2300,dur:'4 a 5 h',slots:['tar'],d:'Laguna tão salgada que você flutua, com pôr do sol no salar.',h:['Flutuação','Ojos del Salar','Laguna Tebinquiche'],obs:''},
+ {id:'puritama',word:1,n:'Termas de Puritama',img:PK('17df2bc944ed'),alt:3500,dur:'3 a 4 h',slots:['tar'],d:'Piscinas termais naturais em sequência dentro de um cânion verde.',h:['Piscinas naturais','Passarelas','Cânion'],obs:'Exige reserva. Confirme horários.'},
+ {id:'astro',word:1,n:'Tour astronômico',img:PK('b68e358e3ece'),alt:2400,dur:'2 a 3 h',slots:['noi'],d:'Um dos céus mais limpos do planeta, com telescópios. Você anotou interesse em astrofoto.',h:['Via Láctea','Telescópios','Astrofoto'],obs:'Melhor sem lua: noites de 01 a 03/12.'},
+ {id:'bike',isNew:1,n:'Bike no deserto',img:WM('Pukará de Quitor (25306665400).jpg'),alt:2500,dur:'3 a 4 h',slots:['man'],d:'Pedal pelos arredores de San Pedro, por conta própria (bike alugada) ou com guia.',h:['Pukará de Quitor','Garganta del Diablo','Valle de la Muerte'],obs:'Vá cedo, com água e protetor. Sol forte à tarde.'},
+ {id:'arco',n:'Valle del Arcoíris',img:PK('bf1a42b9b995'),alt:3000,dur:'4 a 5 h',slots:['man'],d:'Montanhas em tons de vermelho, verde e branco, com petróglifos no caminho.',h:['Montanhas coloridas','Petróglifos Yerbas Buenas'],obs:''},
+ {id:'balti',n:'Lagunas de Baltinache',img:PK('fb484884acc1'),alt:2500,dur:'4 a 5 h',slots:['man'],d:'Sete lagunas escondidas de cor intensa, menos cheias que a Cejar. Também dá para flutuar.',h:['Flutuação','Águas turquesa'],obs:''},
+ {id:'sand',n:'Sandboard no Valle de la Muerte',img:PK('652395b644b8'),alt:2500,dur:'2 a 3 h',slots:['tar'],d:'Descida de prancha nas dunas, a poucos minutos do centro.',h:['Sandboard','Dunas'],obs:''},
+ {id:'balao',n:'Passeio de balão',img:PK('4cc31023bd4c'),alt:2400,dur:'~3 h ao amanhecer',slots:['mad'],d:'Voo ao nascer do sol sobre o deserto, com o vulcão Licancabur no horizonte.',h:['Nascer do sol','Licancabur'],obs:''}
+];
+const UYUNI={id:'uyuni',word:1,n:'Travessia Salar de Uyuni · 4 dias',img:PK('575def9a383c'),alt:4900,dur:'4 dias · 3 noites',d:'Circuito saindo e voltando a San Pedro, pelas lagunas coloridas, desertos e o Salar.',h:['Lagunas','Gêiseres a ~4.900 m','Salar de Uyuni'],obs:'Na Bolívia o relógio fica 1 h atrás. A ordem das paradas varia por agência.'};
+const UYDAYS=[
+ ['Dia 1','Saída de San Pedro, fronteira Hito Cajón, Lagunas Blanca e Verde, Deserto de Dalí, Termas de Polques, Sol de Mañana, Laguna Colorada',4900],
+ ['Dia 2','Deserto de Siloli, Árbol de Piedra, lagunas com flamingos. Noite perto do Salar',4600],
+ ['Dia 3','Nascer do sol no Salar, Isla Incahuasi, Cemitério de Trens',3660],
+ ['Dia 4','Volta até Hito Cajón, entrada no Chile (PDI + SAG), chegada à tarde',4500]];
+const SEEN=[
+ {n:'Lagunas Blanca e Verde',img:WM('Laguna Verde, Bolivia, 2016-02-02, DD 79-82 PAN.JPG'),alt:'~4.300 m',d:'Primeiras paradas na Bolívia, aos pés do vulcão Licancabur.',h:['Dia 1']},
+ {n:'Laguna Colorada',img:WM('Laguna Colorada, Bolivia, 2016-02-02, DD 71-73 PAN.JPG'),alt:'~4.280 m',d:'Água avermelhada por algas e minerais, cheia de flamingos.',h:['Dia 1','Pernoite em refúgio']},
+ {n:'Árbol de Piedra',img:WM('Arbol de Piedra, Bolivia (1).jpg'),alt:'~4.500 m',d:'Rocha esculpida pelo vento no Deserto de Siloli.',h:['Dia 2']},
+ {n:'Salar de Uyuni',img:PK('575def9a383c'),alt:'3.656 m',d:'O maior deserto de sal do mundo. No fim de novembro costuma estar seco.',h:['Dia 3','Nascer do sol']},
+ {n:'Isla Incahuasi',img:WM('Isla Incahuasi, Salar de Uyuni, Bolivia (14630608277).jpg'),alt:'~3.700 m',d:'Ilha no meio do Salar coberta de cactos gigantes.',h:['Dia 3','Entrada paga à parte']},
+ {n:'Cemitério de Trens',img:WM('Train cemetery (Uyuni, Bolivia) (36821758142).jpg'),alt:'~3.670 m',d:'Locomotivas antigas abandonadas perto da cidade de Uyuni.',h:['Dia 3','Confirmar se está na rota']}
+];
+const SUGGEST={plan:{luna:'2026-11-24',lagunas:'2026-11-25',tatio:'2026-11-26',cejar:'2026-12-01',astro:'2026-12-01',arco:'2026-12-02',puritama:'2026-12-02',bike:'2026-12-03'},uy:'2026-11-27'};
+
+let plan=store.get('aty3_plan',{}), uyStart=store.get('aty3_uy',null);
+const tById=id=>TOURS.find(t=>t.id===id);
+const fmtAlt=a=>a.toLocaleString('pt-BR')+' m';
+const dayOf=d=>DAYS.find(x=>x.d===d);
+
+/* ocupação de cada dia: retorna lista de {slot, label, tour} */
+function uyIdx(){return uyStart?dayOf(uyStart).i:-1}
+function uyDayNum(d){const s=uyIdx();if(s<0)return 0;const k=dayOf(d).i-s;return k>=0&&k<4?k+1:0}
+function blockedSlots(d){
+  const k=uyDayNum(d);
+  if(d==='2026-11-23')return ['mad','man','tar','noi'];
+  if(d==='2026-12-04')return ['mad','man','tar','noi'];
+  if(k>=1&&k<=3)return ['mad','man','tar','noi'];
+  if(k===4)return ['mad','man','tar'];
+  return [];
+}
+function usedSlots(d,except){let s=[];Object.entries(plan).forEach(([id,dd])=>{if(dd===d&&id!==except)s=s.concat(tById(id).slots)});return s}
+function warnsFor(t,d){
+  const w=[];const blk=blockedSlots(d);
+  if(t.slots.some(s=>blk.includes(s)))w.push(uyDayNum(d)===4?'Chegada de Uyuni só à tarde':'Dia ocupado');
+  if(t.slots.some(s=>usedSlots(d,t.id).includes(s)))w.push('Choca com outro passeio no mesmo período');
+  if(d==='2026-11-24'&&(t.alt>=4000||t.slots.some(s=>s==='mad'||s==='man')))w.push('1º dia: você chega ~00h30, prefira algo leve à tarde');
+  if(t.id==='astro'&&d<'2026-11-30')w.push('Lua cheia ou quase cheia nesta noite');
+  if(t.alt>=4000&&uyStart&&d<uyStart){const lower=Object.entries(plan).some(([id,dd])=>dd>d&&dd<uyStart&&tById(id).alt<t.alt&&id!==t.id);if(lower)w.push('Há passeio mais baixo depois deste. Inverter ajuda a aclimatar')}
+  return w;
+}
+function dayMaxAlt(d){
+  const k=uyDayNum(d);if(k&&k<4)return {v:UYDAYS[k-1][2],bo:1};if(k===4)return {v:UYDAYS[3][2],bo:1};
+  let m=0;Object.entries(plan).forEach(([id,dd])=>{if(dd===d)m=Math.max(m,tById(id).alt)});return {v:m,bo:0};
+}
+
+/* ============ navegação ============ */
+const NAV=[
+ ['roteiro','Roteiro','<circle cx="6" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 6h7a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h7"/>'],
+ ['passeios','Passeios','<path d="M3 20l6-11 4 6 3-4 5 9z"/><circle cx="17" cy="6" r="2"/>'],
+ ['dicas','Dicas e checklist','<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 12l2.5 2.5 4.5-5"/>']];
+$('#nav').innerHTML=NAV.map(([id,l,ic])=>`<button data-v="${id}" onclick="go('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ic}</svg>${l}</button>`).join('');
+function go(v){
+  document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  window.scrollTo(0,0);store.set('aty3_tab',v);history.replaceState(null,'','#'+v);
+}
+function pane(p){document.querySelectorAll('.pane').forEach(x=>x.classList.toggle('on',x.id==='p-'+p));document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));store.set('aty3_pane',p)}
+
+/* ============ cards de passeio ============ */
+function tourCard(t){
+  const on=!!plan[t.id];const dd=on?dayOf(plan[t.id]):null;
+  return `<article class="tc">
+   <div class="ph"><img loading="lazy" src="${t.img}" alt="${t.n}" onerror="imgErr(this)">
+    <div class="tg">${t.word?'<span class="tag">No seu Word</span>':''}${t.isNew?'<span class="tag new">Novo</span>':''}</div>
+    <span class="alt-pill">${t.alt>=4000?'':'~'}${fmtAlt(t.alt)}</span></div>
+   <div class="bd"><h3>${t.n}</h3><div class="meta">${t.dur} · ${t.slots.map(s=>SLOT[s]).join(' + ')}</div>
+    <p>${t.d}</p><ul>${t.h.map(x=>`<li>${x}</li>`).join('')}</ul>
+    <button class="pick ${on?'on':''}" onclick="openSheet('${t.id}')">${on?`${dd.w} ${dd.l} · alterar`:'Escolher data'}</button></div></article>`;
+}
+function renderTours(){
+  $('#rail-at').innerHTML=TOURS.map(tourCard).join('');
+  const u=UYUNI,on=!!uyStart;
+  const end=on?DAYS[uyIdx()+3]:null;
+  $('#rail-pack').innerHTML=`<article class="tc bo" style="width:88%;max-width:420px">
+   <div class="ph"><img loading="lazy" src="${u.img}" alt="Salar de Uyuni" onerror="imgErr(this)"><div class="tg"><span class="tag">No seu Word</span></div><span class="alt-pill">até ~4.900 m</span></div>
+   <div class="bd"><h3>${u.n}</h3><div class="meta">${u.dur} · volta a San Pedro</div><p>${u.d}</p>
+    <ul>${UYDAYS.map(x=>`<li>${x[0]}: ${x[1].split(',')[x[0]==='Dia 1'?2:0].trim()}</li>`).join('')}</ul>
+    <button class="pick ${on?'on':''}" onclick="openSheet('uyuni')">${on?`${dayOf(uyStart).l} a ${end.l} · alterar`:'Escolher data de saída'}</button></div></article>`;
+  $('#rail-bo').innerHTML=SEEN.map(s=>`<article class="tc bo info"><div class="ph"><img loading="lazy" src="${s.img}" alt="${s.n}" onerror="imgErr(this)"><span class="alt-pill">${s.alt}</span></div>
+   <div class="bd"><h3>${s.n}</h3><p style="margin-top:4px">${s.d}</p><ul style="margin-bottom:0">${s.h.map(x=>`<li>${x}</li>`).join('')}</ul></div></article>`).join('');
+  const n=Object.keys(plan).length;
+  $('#p-count').textContent=n+' de '+TOURS.length+' no roteiro';
+  $('#c-at').textContent=TOURS.length+' passeios';
+}
+
+/* ============ seletor de data ============ */
+let sheetId=null;
+function openSheet(id){
+  sheetId=id;const isUy=id==='uyuni';const t=isUy?UYUNI:tById(id);const cur=isUy?uyStart:plan[id];
+  let rows='';
+  if(isUy){
+    DAYS.slice(1,8).forEach(x=>{ /* saída entre 24/11 e 30/11 (volta até 03/12) */
+      const span=DAYS.slice(x.i,x.i+4);const clash=Object.entries(plan).filter(([tid,dd])=>{const k=dayOf(dd).i-x.i;return k>=0&&k<3||(k===3&&tById(tid).slots.some(s=>s!=='noi'))}).map(([tid])=>tById(tid).n);
+      const w=[];if(x.d==='2026-11-24')w.push('Sem aclimatação antes de subir a 4.900 m');else if(x.d==='2026-11-25')w.push('Só 1 dia de aclimatação');
+      if(clash.length)w.push('Tira do roteiro: '+clash.join(', '));
+      rows+=`<button class="drow ${cur===x.d?'sel':''}" onclick="setUy('${x.d}')"><span class="dd"><span>${x.w}</span><b>${x.l.slice(0,2)}</b></span><span class="dx">Volta ${span[3].w} ${span[3].l}${w.map(a=>`<span class="w">${a}</span>`).join('')}</span><span class="ck">${cur===x.d?CHECK:''}</span></button>`});
+  }else{
+    PICKABLE.forEach(x=>{
+      const blk=blockedSlots(x.d);const full=['mad','man','tar','noi'].every(s=>blk.includes(s));
+      const k=uyDayNum(x.d);
+      const there=Object.entries(plan).filter(([tid,dd])=>dd===x.d&&tid!==id).map(([tid])=>tById(tid).n);
+      const desc=k?`Uyuni · dia ${k}${k===4?' (chega à tarde)':''}`:(there.length?there.join(' + '):'Livre');
+      const w=full?[]:warnsFor(t,x.d);
+      rows+=`<button class="drow ${cur===x.d?'sel':''}" ${full?'disabled':''} onclick="setTour('${id}','${x.d}')"><span class="dd"><span>${x.w}</span><b>${x.l.slice(0,2)}</b></span><span class="dx">${x.l} · ${desc}${w.map(a=>`<span class="w">${a}</span>`).join('')}</span><span class="ck">${cur===x.d?CHECK:''}</span></button>`});
+  }
+  $('#sheet-in').innerHTML=`<h3>${t.n}</h3><p class="sub">${isUy?'Escolha o dia de saída de San Pedro.':t.dur+' · '+t.slots.map(s=>SLOT[s]).join(' + ')}${t.obs?'<br>'+t.obs:''}</p>${rows}
+   <div class="actions" style="margin-top:10px">${cur?`<button class="btn btn-line" onclick="${isUy?'setUy(null)':`setTour('${id}',null)`}">Tirar do roteiro</button>`:''}<button class="btn btn-soft" onclick="closeSheet()">Fechar</button></div>`;
+  $('#scrim').classList.add('on');$('#sheet').classList.add('on');$('#sheet').scrollTop=0;
+}
+function closeSheet(){$('#scrim').classList.remove('on');$('#sheet').classList.remove('on')}
+function setTour(id,d){if(d&&plan[id]===d)d=null;if(d)plan[id]=d;else delete plan[id];store.set('aty3_plan',plan);closeSheet();refresh();toast(d?`${tById(id).n}: ${dayOf(d).w} ${dayOf(d).l}`:'Removido do roteiro')}
+function setUy(d){
+  if(d&&uyStart===d)d=null;uyStart=d;store.set('aty3_uy',d);
+  if(d){Object.entries(plan).forEach(([tid,dd])=>{if(tById(tid).slots.some(s=>blockedSlots(dd).includes(s)))delete plan[tid]});store.set('aty3_plan',plan)}
+  closeSheet();refresh();toast(d?'Travessia de Uyuni no roteiro':'Travessia removida');
+}
+function applySuggestion(){
+  const has=Object.keys(plan).length||uyStart;
+  if(has&&!confirm('Substituir o roteiro atual pela sugestão?'))return;
+  plan={...SUGGEST.plan};uyStart=SUGGEST.uy;store.set('aty3_plan',plan);store.set('aty3_uy',uyStart);refresh();toast('Sugestão aplicada. Ajuste como quiser');
+}
+function clearPlan(){if(confirm('Limpar todos os passeios do roteiro?')){plan={};uyStart=null;store.set('aty3_plan',plan);store.set('aty3_uy',null);refresh()}}
+
+/* ============ roteiro ============ */
+const FLIGHTS={
+ '2026-11-23':{t:'Rio → San Pedro de Atacama',steps:[['13h40','Voo Rio → Santiago'],['18h25','Santiago: imigração (PDI) e alfândega (SAG)'],['20h44','Voo Santiago → Calama'],['22h52','Chegada em Calama'],['~00h30','Transfer até San Pedro']],note:'<b>Conexão de 2h19:</b> confirme se a bagagem vai direto até Calama. Transfer: reservar antes.'},
+ '2026-12-04':{t:'San Pedro → Rio',steps:[['Manhã','Transfer San Pedro → Calama (~1h30)'],['12h03','Voo Calama → Santiago'],['14h07','Santiago: saída pela PDI'],['15h50','Voo Santiago → Rio'],['20h02','Chegada no Rio']],note:'<b>Conexão de 1h43</b> do doméstico para o internacional. Confirme a bagagem até o Rio e o horário do transfer.'}};
+const today=()=>{const n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0')};
+function renderTimeline(){
+  const td=today();let html='',free=0;
+  DAYS.forEach(x=>{
+    const f=FLIGHTS[x.d];const k=uyDayNum(x.d);
+    const items=Object.entries(plan).filter(([,dd])=>dd===x.d).map(([id])=>tById(id)).sort((a,b)=>SLOTORD.indexOf(a.slots[0])-SLOTORD.indexOf(b.slots[0]));
+    let cls='',body='',title='',alt='';const _i=items;
+    if(f){cls='fix';title=f.t;
+      body=`<details class="flights" ${x.d===td?'open':''}><summary>Ver voos e horários</summary><ul class="steps">${f.steps.map(s=>`<li><span class="h t">${s[0]}</span><span>${s[1]}</span><span></span></li>`).join('')}</ul></details><div class="note">${f.note}</div>`;
+      if(x.d==='2026-11-23')body+='';
+    }else if(k&&k<4){cls='bo full';title='Uyuni · '+UYDAYS[k-1][0];alt='~'+fmtAlt(UYDAYS[k-1][2]);
+      body=`<p style="font-size:14px">${UYDAYS[k-1][1]}.</p>${k===1?'<div class="note">Relógio 1 h atrás na Bolívia. Guarde os comprovantes da PDI e da entrada boliviana.</div>':''}`;
+    }else{
+      if(k===4){cls='bo';title='Uyuni · Dia 4 + noite livre';alt='~'+fmtAlt(UYDAYS[3][2])}
+      const list=(k===4?[`<li><span class="h">Dia</span><span>${UYDAYS[3][1]}</span><span></span></li>`]:[]).concat(items.map(t=>{const w=warnsFor(t,x.d).filter(a=>a!=='Dia ocupado');return `<li><span class="h t">${t.slots.map(s=>SLOT[s]).join(' + ')}</span><span class="th"><img src="${t.img}" alt="" onerror="imgErr(this)"><span>${t.n}${w.length?`<span style="display:block;font-size:12px;color:var(--warn)">${w.join(' · ')}</span>`:''}</span></span><button class="rm" aria-label="Alterar" onclick="openSheet('${t.id}')">&rsaquo;</button></li>`}));
+      if(!title)title=items.length?(items.length>1?items.map(t=>t.n.split(' ')[0]==='Tour'?'Astronômico':t.n.split(' +')[0]).join(' + '):items[0].n):'Dia livre';
+      if(!alt&&items.length)alt=(items.some(t=>t.alt>=4000)?'':'~')+fmtAlt(Math.max(...items.map(t=>t.alt)));
+      const usedS=items.flatMap(t=>t.slots);const freeSlot=k!==4&&!items.some(t=>t.slots.includes('man')&&t.slots.includes('tar'))&&usedS.length<3;
+      if(!items.length&&k!==4)free++;
+      body=(list.length?`<ul class="steps">${list.join('')}</ul>`:'')+(freeSlot?`<div class="free" ${list.length?'style="margin-top:6px;padding-top:8px;border-top:1px dashed var(--line)"':''}><span>${items.length?'Ainda tem período livre':(x.d==='2026-11-24'?'Chegada de madrugada. Sugestão: algo leve à tarde':'Nada escolhido')}</span><button onclick="go('passeios')">+ Passeio</button></div>`:'');
+      if(k===4)body+=`<div class="free" style="margin-top:6px;padding-top:8px;border-top:1px dashed var(--line)"><span>Noite livre em San Pedro</span><button onclick="go('passeios')">+ Passeio</button></div>`;
+      if(items.length)cls+=' full';
+    }
+    html+=`<div class="day ${cls} ${x.d===td?'today':''}"><div class="card"><div class="day-h"><span class="day-date">${x.w} ${x.l}${x.d===td?' · hoje':''}</span>${alt?`<span class="alt">${alt}</span>`:''}</div>${(items.length&&!f&&!(k&&k<4))?'':`<h3>${title}</h3>`}${body}</div></div>`;
+  });
+  $('#timeline').innerHTML=html;
+  $('#s-tours').textContent=Object.keys(plan).length+(uyStart?1:0);
+  $('#s-free').textContent=free;
+  $('#altchart').innerHTML=PICKABLE.map(x=>{const a=dayMaxAlt(x.d);const v=a.v;return `<div class="alt-col"><span class="alt-v">${v?(v/1000).toFixed(1).replace('.',','):''}</span><div class="alt-bar ${a.bo?'bo':''} ${v?'':'none'}" style="height:${v?Math.max(4,(v-1800)/3300*100):3}%"></div><span class="alt-d">${x.l.slice(0,2)}</span></div>`}).join('');
+  /* avisos gerais */
+  const W=[];
+  if(!uyStart)W.push(['Travessia de Uyuni ainda sem data','Escolha a saída na aba Passeios.']);
+  if(uyStart&&plan.tatio&&dayOf(plan.tatio).i===uyIdx()-1)W.push(['Duas madrugadas seguidas','Tatio na véspera de Uyuni. Se preferir, troque com outro dia.']);
+  if(plan.astro&&plan.astro<'2026-11-30')W.push(['Astronomia com lua clara','Lua cheia em 24/11. Noites mais escuras: 01 a 03/12.']);
+  $('#plan-warn').innerHTML=W.map(a=>`<div class="alert"><span class="dot"></span><div><b>${a[0]}.</b> ${a[1]}</div></div>`).join('');
+}
+function renderCountdown(){
+  const S=new Date('2026-11-23T13:40:00-03:00'),E=new Date('2026-12-04T20:02:00-03:00'),n=new Date();
+  $('#countdown').innerHTML=n<S?`<b>${Math.ceil((S-n)/864e5)}</b><span>dias para embarcar</span>`:n<=E?`<b>Dia ${Math.floor((n-new Date('2026-11-23T00:00:00-03:00'))/864e5)+1}</b><span>de 12</span>`:`<span>Viagem concluída</span>`;
+}
+
+/* ============ checklist ============ */
+const LISTS=[
+ {id:'docs',t:'Documentos e entrada',items:[
+  ['RG emitido há menos de 10 anos, em bom estado (ou passaporte)','Aceito no Chile e na Bolívia. CNH, certidão, OAB/CRM e cópias NÃO valem','w'],
+  ['Vacina de febre amarela + Certificado Internacional (CIVP)','Obrigatório na Bolívia. Vacina pelo menos 10 dias antes: até 17/11','wa'],
+  ['Guardar o comprovante de entrada da PDI (Chile)','Pedido ao sair para a Bolívia e na saída final','w'],
+  ['Guardar o comprovante de entrada na Bolívia','Exigido na saída do país','a'],
+  ['Declaração Jurada SAG','Online até 48h antes ou em papel na chegada. Nova inspeção ao voltar da Bolívia','a'],
+  ['Seguro viagem contratado, apólice e telefone salvos','Não obrigatório. A Bolívia não oferece atendimento gratuito a turistas','wa'],
+  ['Cópias digitais de documentos e reservas (offline)','','a']]},
+ {id:'roupa',t:'Roupas e acessórios',items:[
+  ['Corta-vento impermeável (anorak ou puffer grosso)','Chuvas isoladas em Uyuni no fim de novembro','w'],
+  ['Segunda pele térmica: blusa e calça (2 conjuntos)','Madrugadas e Uyuni','w'],
+  ['Calça polar','Novembro: abaixo de 0 °C no Tatio e em Uyuni','w'],
+  ['Calças de trekking, legging grossa ou moletom','Evite jeans','w'],
+  ['Calça-bermuda','','w'],
+  ['Fleece ou moletom grosso','Camada do meio','w'],
+  ['Touca, luvas e cachecol ou buff','Buff protege da poeira e do vento','w'],
+  ['Chapéu ou boné','','w'],
+  ['Bota ou tênis de trekking amaciado','','w'],
+  ['Meias grossas (2+ pares)','','w'],
+  ['Chinelo ou sandália','Hotel e termas','w'],
+  ['Roupa de banho','Cejar, Baltinache, Puritama, termas','w'],
+  ['Óculos de sol com proteção UV','Reflexo forte no Salar','a'],
+  ['Camisetas leves de manga longa','Sol forte durante o dia','a'],
+  ['Pijama quente','Refúgios sem aquecimento','a']]},
+ {id:'mala',t:'Mala, saúde e essenciais',items:[
+  ['Protetor solar FPS 50+','','w'],
+  ['Hidratante labial','','w'],
+  ['Hidratante corporal e facial','','w'],
+  ['Soro ou pomada nasal (rinossoro)','','w'],
+  ['Repelente','','w'],
+  ['Remédios básicos para dor de cabeça e enjoo de altitude','Converse com um médico antes','wa'],
+  ['Medicamentos de uso contínuo + receitas','','a'],
+  ['Garrafa de água reutilizável','Cerca de 3 L por dia','w'],
+  ['Powerbank','Energia limitada nos refúgios','w'],
+  ['Lanterna de cabeça','Madrugadas e refúgios','a'],
+  ['Adaptador universal de tomada','','a'],
+  ['Papel higiênico, lenços umedecidos e álcool em gel','Banheiros simples na rota de Uyuni','a'],
+  ['Proteção contra poeira para câmera e celular','','a'],
+  ['Mochila pequena para os passeios','','a'],
+  ['Saco de dormir','Ver se a agência de Uyuni fornece ou aluga','ac']]},
+ {id:'din',t:'Dinheiro, internet e transporte',items:[
+  ['Decidir: trocar pesos no Rio ou em Santiago','','w'],
+  ['Pesos chilenos: CLP 80.000 por dia em espécie','R$ 474,05/dia no seu Word. Conferir cotação','wc'],
+  ['Pesquisar e ativar cartão Wise ou Nomad','','w'],
+  ['Bolivianos: trocar ainda no Chile','Word cita 300 a 400 BOB e também R$ 400. Definir valor','wc'],
+  ['Notas pequenas para banheiros, Wi-Fi e extras','','w'],
+  ['Taxas pagas à parte em Uyuni (parque, Incahuasi, termas)','Pedir lista e valores à agência','ac'],
+  ['Chip local (Claro recomendado) ou roaming da operadora','Ligar para a operadora','w'],
+  ['Baixar mapas offline e abrir este guia com internet','Em Uyuni quase não há sinal','a'],
+  ['Transfer Calama → San Pedro (chegada 22h52)','','w'],
+  ['Transfer San Pedro → Calama em 04/12 (voo 12h03)','','a']]},
+ {id:'res',t:'Reservas e pendências',dyn:1,items:[
+  ['Hospedagem perto da Rua Caracoles a partir de 23/11','Você chega ~00h30 de 24/11','wa'],
+  ['Hospedagem de 30/11 a 04/12','Confirmar check-out e guarda de malas','ac'],
+  ['Bagagem despachada até Calama e de volta até o Rio','Conexões curtas em Santiago','ac'],
+  ['Consulta médica antes da viagem','','a']]}
+];
+let st=store.get('aty3_ck',{}),extra=store.get('aty3_extra',{}),open=store.get('aty3_open',['docs']);
+const CHECK='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+function ring(p){const r=16,c=2*Math.PI*r;return `<svg class="ring" viewBox="0 0 40 40"><circle cx="20" cy="20" r="${r}" fill="none" stroke="#E9E3D9" stroke-width="4"/><circle cx="20" cy="20" r="${r}" fill="none" stroke="${p===100?'#5E7D5A':'#B5643C'}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-p/100)}" transform="rotate(-90 20 20)"/><text x="20" y="24" text-anchor="middle" font-size="10.5" font-weight="600" fill="#1F1D1A" font-family="Inter,sans-serif">${p}%</text></svg>`}
+function allItems(L){
+  let its=L.items.map((it,i)=>({k:L.id+'-'+i,t:it[0],s:it[1],g:it[2]}));
+  if(L.dyn){
+    const tours=Object.entries(plan).sort((a,b)=>a[1]<b[1]?-1:1).map(([id,d])=>({k:'tour-'+id,t:'Reservar: '+tById(id).n,s:dayOf(d).w+' '+dayOf(d).l+(tById(id).obs?' · '+tById(id).obs:''),g:''}));
+    if(uyStart)tours.unshift({k:'tour-uyuni',t:'Reservar: travessia de Uyuni 4 dias',s:'Saída '+dayOf(uyStart).l+' · confirmar refeições, hospedagem, saco de dormir e taxas',g:'c'});
+    its=tours.concat(its);
+  }
+  return its.concat((extra[L.id]||[]).map(e=>({k:e.k,t:e.t,s:'',g:'',custom:1})));
+}
+function renderLists(){
+  let tot=0,done=0;
+  $('#lists').innerHTML=LISTS.map(L=>{
+    const its=allItems(L);const d=its.filter(i=>st[i.k]).length;tot+=its.length;done+=d;const p=its.length?Math.round(d/its.length*100):0;
+    return `<div class="cl ${open.includes(L.id)?'open':''}" id="cl-${L.id}"><button class="cl-h" onclick="toggleList('${L.id}')">${ring(p)}<div class="tt"><b>${L.t}</b><span>${d} de ${its.length} concluídos</span></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+     <div class="cl-b">${L.dyn&&!Object.keys(plan).length&&!uyStart?'<div class="empty">Os passeios que você escolher entram aqui automaticamente.</div>':''}${its.map(i=>`<div class="item ${st[i.k]?'done':''}" onclick="tick('${i.k}')"><span class="box">${CHECK}</span><span class="lbl"><span class="tx">${i.t}</span> ${tags(i.g)}${i.s?`<small>${i.s}</small>`:''}</span>${i.custom?`<button class="del" aria-label="Remover" onclick="event.stopPropagation();delItem('${L.id}','${i.k}')">&times;</button>`:''}</div>`).join('')}
+     <form class="add" onsubmit="event.preventDefault();addItem('${L.id}',this.q)"><input name="q" placeholder="Adicionar item" autocomplete="off"><button aria-label="Adicionar">+</button></form></div></div>`}).join('');
+  const p=tot?Math.round(done/tot*100):0;
+  $('#tot-txt').textContent=`${done} de ${tot} itens · ${p}%`;$('#tot-bar').style.width=p+'%';$('#ck-top').textContent=p+'% do checklist';
+}
+function tick(k){st[k]=!st[k];if(!st[k])delete st[k];store.set('aty3_ck',st);renderLists()}
+function toggleList(id){open=open.includes(id)?open.filter(x=>x!==id):open.concat(id);store.set('aty3_open',open);document.getElementById('cl-'+id).classList.toggle('open')}
+function addItem(id,inp){const v=inp.value.trim();if(!v)return;(extra[id]=extra[id]||[]).push({k:id+'-x'+Date.now(),t:v.replace(/[<>]/g,'')});store.set('aty3_extra',extra);if(!open.includes(id))open.push(id);renderLists()}
+function delItem(id,k){extra[id]=(extra[id]||[]).filter(e=>e.k!==k);delete st[k];store.set('aty3_extra',extra);store.set('aty3_ck',st);renderLists()}
+function resetAll(){if(confirm('Desmarcar todos os itens?')){st={};store.set('aty3_ck',st);renderLists()}}
+
+/* ============ dicas ============ */
+$('#tips').innerHTML=`
+ <div class="block-h" style="margin-top:0">Consulta rápida</div>
+ <div class="tips">
+  <div class="tip"><div class="eyebrow">Fuso</div><b>Chile = Brasília</b><span>Bolívia: 1 h a menos ${TAG.c}</span></div>
+  <div class="tip"><div class="eyebrow">Sol em San Pedro</div><b>~6h40 · ~20h00</b><span>Uyuni: ~5h40 · ~18h55</span></div>
+  <div class="tip"><div class="eyebrow">Lua</div><b>Cheia em 24/11</b><span>Céu escuro de 01 a 03/12</span></div>
+  <div class="tip"><div class="eyebrow">Clima</div><b>Dias quentes, noites frias</b><span>Abaixo de 0 °C no Tatio e em Uyuni</span></div>
+  <div class="tip"><div class="eyebrow">Ar</div><b>Umidade abaixo de 10%</b><span>Água, soro nasal, FPS 50+ ${TAG.w}</span></div>
+  <div class="tip"><div class="eyebrow">Tomadas</div><b>Chile: C e L · 220 V</b><span>Bolívia: A e C · 230 V</span></div>
+  <div class="tip"><div class="eyebrow">Onde ficar</div><b>Perto da Rua Caracoles</b><span>Câmbio, agências e restaurantes ${TAG.w}</span></div>
+  <div class="tip"><div class="eyebrow">Água</div><b>Prefira engarrafada</b><span>Cerca de 3 L por dia ${TAG.w}</span></div>
+  <div class="tip wide"><div class="eyebrow">Emergência no Chile</div><b>Ambulância 131 · Bombeiros 132 · Carabineros 133 · PDI 134</b><span>Na Bolívia, use o contato da agência e do seguro viagem.</span></div>
+ </div>
+ <div class="block-h">Altitude</div>
+ <div class="card"><ul class="ul">
+  <li>Passeios mais baixos primeiro, mais altos por último ${TAG.w}<small>O roteiro avisa quando a ordem está invertida.</small></li>
+  <li>Deixe ao menos 2 dias em San Pedro antes de Uyuni ${TAG.a}</li>
+  <li>Hidratação e ar seco: veja o checklist de saúde ${TAG.w}</li>
+  <li>Converse com um médico antes da viagem ${TAG.a}</li></ul></div>
+ <div class="block-h">Fronteira e alfândega</div>
+ <div class="card"><ul class="ul">
+  <li>Guarde o papel da PDI e o comprovante de entrada na Bolívia ${TAG.w}</li>
+  <li>Não leve frutas, verduras, carnes, laticínios, mel ou sementes sem declarar ${TAG.a}</li>
+  <li>Folha de coca não pode entrar no Chile na volta de Uyuni ${TAG.a}</li>
+  <li>Troque bolivianos ainda em San Pedro ${TAG.w}</li></ul></div>
+ <div class="block-h">Análise do seu Word</div>
+ <div class="card">
+  <div class="issue"><span class="n">1</span><div><b>Hospedagem começa em 23/11</b><span>A chegada é ~00h30 de 24/11.</span></div></div>
+  <div class="issue"><span class="n">2</span><div><b>Ordem por altitude</b><span>Tatio e Lagunas estavam no início. Sugestão: Valle de la Luna → Lagunas → Tatio → Uyuni.</span></div></div>
+  <div class="issue"><span class="n">3</span><div><b>Conexões curtas em Santiago</b><span>2h19 na ida e 1h43 na volta. Confirmar bagagem.</span></div></div>
+  <div class="issue"><span class="n">4</span><div><b>Bolivianos com dois valores</b><span>R$ 400 e 300 a 400 BOB não são o mesmo valor.</span></div></div>
+  <div class="issue"><span class="n">5</span><div><b>Prazo da febre amarela</b><span>Vacina até 17/11 para entrar em 27/11.</span></div></div>
+  <div class="issue"><span class="n">6</span><div><b>Itens que faltavam</b><span>SAG, transfer de volta, taxas de Uyuni, lanterna, adaptador, óculos de sol, mapas offline, fuso.</span></div></div>
+ </div>`;
+
+/* ============ init ============ */
+function refresh(){renderTours();renderTimeline();renderLists()}
+renderCountdown();refresh();
+pane(store.get('aty3_pane','ck'));
+const start=(location.hash||'').slice(1)||store.get('aty3_tab','roteiro');
+go(NAV.some(n=>n[0]===start)?start:'roteiro');
+</script>
+</body>
+</html>
